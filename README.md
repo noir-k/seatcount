@@ -1,1 +1,1 @@
-"noir-k@seatcount" 
+noir-k@seatcount
