@@ -1,6 +1,8 @@
 int frameno = 0;
 int[][] seatStatus = new int[6][301];
 int dotsize[] = new int[6];
+int posx[] = new int[6];
+int posy[] = new int[6];
   
 void setup() {
  size(640, 480); 
@@ -13,6 +15,11 @@ void setup() {
  
  smooth();
  seatStatusSetup();
+ 
+ for(int i=1; i<6; i++) {
+   posx[i] = (width-100)/10*(2*i-1)+50;
+   posy[i] = 300;
+ }
 }
 void draw() {
   background(0);
@@ -27,7 +34,7 @@ void draw() {
     } else {
       dotsize[i] = 10;
     }
-    ellipse(100*i, 300, dotsize[i], dotsize[i]);
+    ellipse(posx[i], posy[i], dotsize[i], dotsize[i]);
   }
 }
 
