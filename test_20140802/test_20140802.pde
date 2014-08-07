@@ -1,8 +1,6 @@
 int frameno = 0;
 int[][] seatStatus = new int[6][301];
 int dotsize[] = new int[6];
-int posx[] = new int[6];
-int posy[] = new int[6];
   
 void setup() {
  size(640, 480); 
@@ -15,26 +13,36 @@ void setup() {
  
  smooth();
  seatStatusSetup();
- 
- for(int i=1; i<6; i++) {
-   posx[i] = (width-100)/10*(2*i-1)+50;
-   posy[i] = 300;
- }
+
+ rectMode(RADIUS);
 }
+
 void draw() {
   background(0);
-  frameno++;
+
+  if(frameno < seatStatus[0].length - 1) {
+    frameno++;
+  } else {
+    frameno = 0;
+  }
+  
   stroke(255);
   fill(255);
   text(frameno, 100, 100);
-  for(int i=1; i<6; i++) {
-    text(seatStatus[i][frameno%300], 100*i, 200);
-    if(seatStatus[i][frameno%300] == 1) {
-      dotsize[i] += 5;
+
+  for(int i=1; i<seatStatus.length; i++) {
+    text(seatStatus[i][frameno], width/10*(2*i-1), 200);
+    if(seatStatus[i][frameno] == 1) {
+      dotsize[i] += 3;
     } else {
-      dotsize[i] = 10;
+      if(dotsize[i] > 5) {
+        dotsize[i] -= 6;
+      } else {
+        dotsize[i] = 0;
+      }
     }
-    ellipse(posx[i], posy[i], dotsize[i], dotsize[i]);
+    fill(255, 50);
+    rect(width/10*(2*i-1), height/2, dotsize[i], dotsize[i]);
   }
 }
 
