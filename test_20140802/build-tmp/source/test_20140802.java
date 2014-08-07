@@ -1,10 +1,24 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class test_20140802 extends PApplet {
+
 int frameno = 0;
 int[][] seatStatus = new int[6][301];
 int dotsize[] = new int[6];
-int posx[] = new int[6];
-int posy[] = new int[6];
   
-void setup() {
+public void setup() {
  size(640, 480); 
  frameRate(10);
  
@@ -15,16 +29,11 @@ void setup() {
  
  smooth();
  seatStatusSetup();
- 
-for(int i=1; i<6; i++) {
-  posx[i] = (width-100)/10*(2*i-1)+50;
-  posy[i] = 300;
+
+ rectMode(RADIUS);
 }
 
-rectMode(RADIUS);
-
-}
-void draw() {
+public void draw() {
   background(0);
 
   if(frameno < seatStatus[0].length - 1) {
@@ -32,22 +41,10 @@ void draw() {
   } else {
     frameno = 0;
   }
-
+  
   stroke(255);
   fill(255);
   text(frameno, 100, 100);
-
-/*
-  for(int i=1; i<6; i++) {
-    text(seatStatus[i][frameno%300], 100*i, 200);
-    if(seatStatus[i][frameno%300] == 1) {
-      dotsize[i] += 5;
-    } else {
-      dotsize[i] = 10;
-    }
-    ellipse(posx[i], posy[i], dotsize[i], dotsize[i]);
-  }
-*/
 
   for(int i=1; i<seatStatus.length; i++) {
     text(seatStatus[i][frameno], width/10*(2*i-1), 200);
@@ -63,10 +60,9 @@ void draw() {
     fill(255, 50);
     rect(width/10*(2*i-1), height/2, dotsize[i], dotsize[i]);
   }
-
 }
 
-void seatStatusSetup() {
+public void seatStatusSetup() {
 seatStatus[1][1]=0;  seatStatus[2][1]=0;  seatStatus[3][1]=0;  seatStatus[4][1]=0;  seatStatus[5][1]=0;
 seatStatus[1][2]=0;  seatStatus[2][2]=0;  seatStatus[3][2]=0;  seatStatus[4][2]=0;  seatStatus[5][2]=0;
 seatStatus[1][3]=0;  seatStatus[2][3]=0;  seatStatus[3][3]=0;  seatStatus[4][3]=0;  seatStatus[5][3]=0;
@@ -367,4 +363,13 @@ seatStatus[1][297]=0;  seatStatus[2][297]=0;  seatStatus[3][297]=1;  seatStatus[
 seatStatus[1][298]=0;  seatStatus[2][298]=0;  seatStatus[3][298]=1;  seatStatus[4][298]=0;  seatStatus[5][298]=0;
 seatStatus[1][299]=0;  seatStatus[2][299]=0;  seatStatus[3][299]=1;  seatStatus[4][299]=0;  seatStatus[5][299]=0;
 seatStatus[1][300]=0;  seatStatus[2][300]=0;  seatStatus[3][300]=0;  seatStatus[4][300]=0;  seatStatus[5][300]=0;
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "test_20140802" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }

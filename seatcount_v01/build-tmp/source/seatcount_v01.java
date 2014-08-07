@@ -1,10 +1,26 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class seatcount_v01 extends PApplet {
+
 int frameno = 0;
 int[][] seatStatus = new int[6][301];
 int dotsize[] = new int[6];
 int posx[] = new int[6];
 int posy[] = new int[6];
   
-void setup() {
+public void setup() {
  size(640, 480); 
  frameRate(10);
  
@@ -24,7 +40,7 @@ for(int i=1; i<6; i++) {
 rectMode(RADIUS);
 
 }
-void draw() {
+public void draw() {
   background(0);
 
   if(frameno < seatStatus[0].length - 1) {
@@ -66,7 +82,7 @@ void draw() {
 
 }
 
-void seatStatusSetup() {
+public void seatStatusSetup() {
 seatStatus[1][1]=0;  seatStatus[2][1]=0;  seatStatus[3][1]=0;  seatStatus[4][1]=0;  seatStatus[5][1]=0;
 seatStatus[1][2]=0;  seatStatus[2][2]=0;  seatStatus[3][2]=0;  seatStatus[4][2]=0;  seatStatus[5][2]=0;
 seatStatus[1][3]=0;  seatStatus[2][3]=0;  seatStatus[3][3]=0;  seatStatus[4][3]=0;  seatStatus[5][3]=0;
@@ -367,4 +383,13 @@ seatStatus[1][297]=0;  seatStatus[2][297]=0;  seatStatus[3][297]=1;  seatStatus[
 seatStatus[1][298]=0;  seatStatus[2][298]=0;  seatStatus[3][298]=1;  seatStatus[4][298]=0;  seatStatus[5][298]=0;
 seatStatus[1][299]=0;  seatStatus[2][299]=0;  seatStatus[3][299]=1;  seatStatus[4][299]=0;  seatStatus[5][299]=0;
 seatStatus[1][300]=0;  seatStatus[2][300]=0;  seatStatus[3][300]=0;  seatStatus[4][300]=0;  seatStatus[5][300]=0;
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "seatcount_v01" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }
