@@ -18,14 +18,14 @@ void setup() {
  
 for(int i=1; i<6; i++) {
   posx[i] = (width-100)/10*(2*i-1)+50;
-  posy[i] = 300;
+  posy[i] = height/2;
 }
 
 rectMode(RADIUS);
 
 }
 void draw() {
-  background(0);
+  background(0, 0, 0, 100); // R,G,B,alpha
 
   if(frameno < seatStatus[0].length - 1) {
     frameno++;
@@ -60,8 +60,24 @@ void draw() {
         dotsize[i] = 0;
       }
     }
-    fill(255, 50);
-    rect(width/10*(2*i-1), height/2, dotsize[i], dotsize[i]);
+    // 接触判定
+    fill(255, 255, 255, 50);
+    for(int j=1; j<6; j++) {
+      if(j != i) {
+        if(abs(posx[i] - posx[j]) < (dotsize[i] + dotsize[j])) {
+          if(dotsize[i] < dotsize[j]) {
+            fill(0, 255, 0, 50);
+            dotsize[i] += 10;
+            dotsize[j] -= 10;
+          } else {
+            fill(255, 0, 0, 50);
+            dotsize[i] -= 10;
+            dotsize[j] += 10;
+          }
+        }
+     }
+    }
+    rect(posx[i], posy[i], dotsize[i], dotsize[i]);
   }
 
 }
