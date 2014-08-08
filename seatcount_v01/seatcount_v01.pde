@@ -1,31 +1,47 @@
 int frameno = 0;
 int[][] seatStatus = new int[6][301];
 int dotsize[] = new int[6];
+int dotsizeOld[] = new int[6];
 int posx[] = new int[6];
 int posy[] = new int[6];
-  
+color dotcolor[] = new color[6];
+int keepoint[] = new int[6];
+int keepointHist[] = new int[6];
+int keepointTop[] = new int[6];
+int keepointTotal[] = new int[6];
+int touch[] = new int[6];
+
 void setup() {
- size(640, 480); 
- frameRate(10);
- 
- background(0);
- 
- stroke(255);
- fill(255);
- 
- smooth();
- seatStatusSetup();
- 
-for(int i=1; i<6; i++) {
-  posx[i] = (width-100)/10*(2*i-1)+50;
-  posy[i] = height/2;
+  size(640, 480);
+  frameRate(15);
+   
+  background(0, 0, 0, 255);
+   
+  stroke(255, 255, 255, 255);
+  fill(255, 255, 255, 255);
+   
+  smooth();
+  seatStatusSetup();
+
+  int widthSpace = 50;
+   
+  for(int i=1; i<6; i++) {
+    posx[i] = (width-widthSpace*2)/10*(2*i-1)+widthSpace;
+    posy[i] = height/2;
+    dotsize[i] = 0;
+    dotsizeOld[i] = 0;
+    keepoint[i] = 0;
+    keepointHist[i] = 0;
+    keepointTop[i] = 0;
+    dotcolor[i] = color(255, 255, 255, 50);
+    touch[i] = 0;
+  }
+
+  rectMode(RADIUS);
 }
 
-rectMode(RADIUS);
-
-}
 void draw() {
-  background(0, 0, 0, 100); // R,G,B,alpha
+  background(0, 0, 0, 255); // R,G,B,alpha
 
   if(frameno < seatStatus[0].length - 1) {
     frameno++;
@@ -33,50 +49,90 @@ void draw() {
     frameno = 0;
   }
 
-  stroke(255);
-  fill(255);
-  text(frameno, 100, 100);
-
-/*
-  for(int i=1; i<6; i++) {
-    text(seatStatus[i][frameno%300], 100*i, 200);
-    if(seatStatus[i][frameno%300] == 1) {
-      dotsize[i] += 5;
-    } else {
-      dotsize[i] = 10;
-    }
-    ellipse(posx[i], posy[i], dotsize[i], dotsize[i]);
-  }
-*/
+  fill(255, 255, 255, 255);
+  text(frameno, posx[1], 50);
+  text(keepointTotal[0], posx[1], 100);
 
   for(int i=1; i<seatStatus.length; i++) {
-    text(seatStatus[i][frameno], width/10*(2*i-1), 200);
+    stroke(255, 255, 255, 255);
+    fill(255, 255, 255, 255);
+
+  }
+
+  int normalPlus = 3;
+  int normalMinus = 10;
+
+  for(int i=1; i<seatStatus.length; i++) {
+    stroke(255, 255, 255, 255);
+    fill(255, 255, 255, 255);
+    text(seatStatus[i][frameno], posx[i], 150);
+    text(dotsize[i], posx[i], 200);
+    text(keepoint[i], posx[i], 250);
+    text(keepointHist[i], posx[i], 300);
+    text(keepointTop[i], posx[i], 350);
+    text(keepointTotal[i], posx[i], 400);
+    text(touch[i], posx[i], 450);
+
+    // 初期化系
+    dotsizeOld[i] = dotsize[i];
+    dotcolor[i] = color(255, 255, 255, 50);
+    touch[i] = 0;
+
+    // 基本処理
     if(seatStatus[i][frameno] == 1) {
-      dotsize[i] += 3;
+      dotsize[i] += normalPlus;
+      dotcolor[i] = color(255, 0, 0, 50);
     } else {
-      if(dotsize[i] > 5) {
-        dotsize[i] -= 6;
+      if(dotsize[i] > normalMinus) {
+        dotsize[i] -= normalMinus;
+        dotcolor[i] = color(0, 0, 255, 50);
       } else {
         dotsize[i] = 0;
       }
     }
+
     // 接触判定
     fill(255, 255, 255, 50);
     for(int j=1; j<6; j++) {
-      if(j != i) {
+      if((j != i) && (dotsize[j] != 0)) {
         if(abs(posx[i] - posx[j]) < (dotsize[i] + dotsize[j])) {
+          touch[i]++;
           if(dotsize[i] < dotsize[j]) {
-            fill(0, 255, 0, 50);
             dotsize[i] += 10;
             dotsize[j] -= 10;
+            dotcolor[i] = color(0, 0, 255, 100);
+            dotcolor[j] = color(255, 0, 0, 100);
+          } else if(dotsize[i] == dotsize[j]) {
+            dotsize[i] -= 20;
+            dotsize[j] -= 20;
+            dotcolor[i] = color(0, 255, 0, 100);
+            dotcolor[j] = color(0, 255, 0, 100);
           } else {
-            fill(255, 0, 0, 50);
             dotsize[i] -= 10;
             dotsize[j] += 10;
+            dotcolor[i] = color(255, 0, 0, 100);
+            dotcolor[j] = color(0, 0, 255, 100);
           }
         }
      }
     }
+
+    // 得点計算
+    if(dotsize[i] > 0) {
+      keepoint[i]++;
+    } else if(dotsizeOld[i] != 0){
+        keepointHist[i] = keepoint[i];
+        keepointTotal[i] += keepoint[i];
+        keepointTotal[0] += keepoint[i];
+        keepoint[i] = 0;
+        if(keepointHist[i] > keepointTop[i]) {
+          keepointTop[i] = keepointHist[i];
+        }
+    } 
+
+    // 描写
+    stroke(255, 255, 255, 255);
+    fill(dotcolor[i]);
     rect(posx[i], posy[i], dotsize[i], dotsize[i]);
   }
 
